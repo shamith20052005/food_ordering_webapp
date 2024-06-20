@@ -1,134 +1,143 @@
-<div style="display: flex; justify-content: center; align-items: center; padding-top: 15dvh ">
-  <div class="order-form-container">
-    <h1>Place Your Order</h1><br>
-    <form method="post" id="order-form">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Place Your Order</title>
+</head>
+<body>
+    <div style="display: flex; justify-content: center; align-items: center; padding-top: 15dvh;">
+        <div class="order-form-container">
+            <h1>Place Your Order</h1><br>
+            <form method="post" id="order-form">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
 
-      <div class="form-group">
-        {{ form.mode_of_eating.label_tag }}
-        {{ form.mode_of_eating }}
-        {{ form.mode_of_eating.errors }}
-      </div>
+                <div class="form-group">
+                    {{ form.mode_of_eating.label_tag }}
+                    {{ form.mode_of_eating }}
+                    {{ form.mode_of_eating.errors }}
+                </div>
 
-      <div id="address-field" class="form-group" style="display: none;">
-        {{ form.address.label_tag }}
-        {{ form.address }}
-        {{ form.address.errors }}
-        <p>You can add adress <a href="{% url 'add_address' %}">here</a></p>
-      </div>
+                <div id="address-field" class="form-group" style="display: none;">
+                    {{ form.address.label_tag }}
+                    {{ form.address }}
+                    {{ form.address.errors }}
+                    <p>You can add address <a href="{% url 'add_address' %}">here</a></p>
+                </div>
 
-      <h3>Order Items</h3>
-      <ul class="cart-items">
-        {% for cart_item in cart_items %}
-          <li>{{ cart_item.menu_item.item }} - {{ cart_item.menu_item.price }} x {{ cart_item.quantity }}</li>
-        {% endfor %}
-      </ul>
+                <h3>Order Items</h3>
+                <ul class="cart-items">
+                    {% for cart_item in cart_items %}
+                        <li>{{ cart_item.menu_item.item }} - {{ cart_item.menu_item.price }} x {{ cart_item.quantity }}</li>
+                    {% endfor %}
+                </ul>
 
-      <p class="total-price">Total Price: {{ cart_total }}</p>
-      <p>return to <a href="{% url 'cart_view' %}">cart</a></p>
+                <p class="total-price">Total Price: {{ cart_total }}</p>
+                <p>return to <a href="{% url 'cart_view' %}">cart</a></p>
 
-      <button type="submit">Place Order</button>
-    </form>
-  </div>
-</div>
+                <button type="submit">Place Order</button>
+            </form>
+        </div>
+    </div>
 
-<script>
-  const modeOfEatingField = document.querySelector('#id_mode_of_eating');
-  const addressField = document.querySelector('#address-field');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modeOfEatingField = document.querySelector('#id_mode_of_eating');
+            const addressField = document.querySelector('#address-field');
 
-  modeOfEatingField.addEventListener('change', () => {
-    if (modeOfEatingField.value === 'delivery') {
-      addressField.style.display = 'block';
-    } else {
-      addressField.style.display = 'none';
-    }
-  });
-</script>
+            function toggleAddressField() {
+                if (modeOfEatingField.value === 'delivery') {
+                    addressField.style.display = 'block';
+                } else {
+                    addressField.style.display = 'none';
+                }
+            }
 
-<style>
-  /* General Styles */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-}
+            modeOfEatingField.addEventListener('change', toggleAddressField);
+            toggleAddressField();  // Initialize visibility on page load
+        });
+    </script>
 
-.order-form-container {
-  background-color: #f5f5f5;
-  padding: 60px;
-  border-radius: 5px;
-  max-width: 500px;
-  text-align: center; /* Center form content horizontally */
-  padding-bottom: 5px;
-  padding-top: 15px;
-}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
 
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  margin-top: 2px;
-  padding-top: 0px;
-}
+        .order-form-container {
+            background-color: #f5f5f5;
+            padding: 60px;
+            border-radius: 5px;
+            max-width: 500px;
+            text-align: center;
+            padding-bottom: 5px;
+            padding-top: 15px;
+        }
 
-/* Form Styles */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Spacing between form elements */
-}
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            margin-top: 2px;
+            padding-top: 0px;
+        }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  align-items:center; /* Align labels and inputs to the left */
-  width: 100%; /* Make form elements full width */
-}
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-.form-group label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
 
-input[type="text"],
-input[type="radio"] {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  width: 100%; /* Make input fields full width */
-}
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
 
-textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  resize: vertical; /* Allow users to resize the text area */
-  min-height: 100px; /* Set a minimum height for the text area */
-  width: 100%; /* Make text area full width */
-}
+        input[type="text"],
+        input[type="radio"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 100%;
+        }
 
-/* Cart Items List */
-.cart-items {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+        textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            resize: vertical;
+            min-height: 100px;
+            width: 100%;
+        }
 
-.cart-items li {
-  margin-bottom: 5px;
-}
+        .cart-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-/* Total Price */
-.total-price {
-  font-weight: bold;
-  margin-top: 10px;
-}
+        .cart-items li {
+            margin-bottom: 5px;
+        }
 
-/* Button */
-button[type="submit"] {
-  background-color: #008cba; /* Change button color to your preference */
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-}
-</style>
+        .total-price {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #008cba;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</body>
+</html>
+

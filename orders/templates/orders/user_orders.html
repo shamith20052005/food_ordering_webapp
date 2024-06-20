@@ -17,6 +17,8 @@
         {% endfor %}
       </ul>
       Total Price: {{ order.get_total_price }}
+      <br>
+      <a href="{% url 'track_order' order.id %}">Track Order</a>
       <hr style="width: 25dvw; margin-left: 2px;">
     </li>
   {% endfor %}
