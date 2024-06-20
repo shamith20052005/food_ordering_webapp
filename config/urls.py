@@ -38,6 +38,8 @@ urlpatterns = [
     path('cart/', cart_view, name='cart_view'),
     path('search/', search_menu, name='search_menu'),
     path('search/add-to-cart/<int:item_id>/', add_to_cart_from_search, name='add_to_cart_search'),
+
+    path('api/', include('api.urls')),
 ] 
 
 if settings.DEBUG:
