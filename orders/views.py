@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-
+from rest_framework.views import APIView
 from orders.models import Orders, Address
 from .forms import AddressForm
 
@@ -34,3 +34,4 @@ def add_address_in_order_create(request):
   context = {'address_form': form}
 
   return render(request, 'orders/address_form.html', context)
+

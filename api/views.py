@@ -10,10 +10,11 @@ from django.contrib.auth.models import User
 from cart.models import Cart, CartItem
 from .serializers import (
     UserSerializer, MenuSerializer, CategorySerializer, 
-    OrderSerializer, AddressSerializer, CartSerializer, CartItemSerializer
+    OrderSerializer, AddressSerializer, CartSerializer, CartItemSerializer,TrackOrderSerializer
 )
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+import json
 
 # Home API views
 
@@ -142,3 +143,20 @@ class CartItemDelete(generics.DestroyAPIView):
 
     def get_queryset(self):
         return self.queryset.filter(cart__user=self.request.user)
+
+
+class TrackOrderAPIView(APIView):
+    def get(self, request, order_id):
+        try:
+            order = Orders.objects.get(id=order_id, user=request.user)
+        except Orders.DoesNotExist:
+            return Response({'detail': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if not order.is_placed():
+            return Response({'detail': 'Order is not placed yet'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not order.address:
+            return Response({'detail': 'No address provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = TrackOrderSerializer(order)
+        return Response(serializer.data)

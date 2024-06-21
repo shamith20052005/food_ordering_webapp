@@ -40,6 +40,7 @@ urlpatterns = [
     path('search/add-to-cart/<int:item_id>/', add_to_cart_from_search, name='add_to_cart_search'),
 
     path('api/', include('api.urls')),
+    path('track/', include('track.urls')),
 ] 
 
 if settings.DEBUG:

@@ -3,7 +3,7 @@ from .views import (
     MenuList, CategoryList, MenuSearch,
     UserOrderList, CreateOrder,
     AddressList, CreateAddress, UserList,
-    CartView, CartItemCreateUpdate, CartItemIncrementDecrement, CartItemDelete
+    CartView, CartItemCreateUpdate, CartItemIncrementDecrement, CartItemDelete,TrackOrderAPIView
 )
 
 urlpatterns = [
@@ -19,5 +19,7 @@ urlpatterns = [
     path('cartitem/', CartItemCreateUpdate.as_view(), name='cartitem-create-update'),
     path('cartitem/<int:pk>/', CartItemIncrementDecrement.as_view(), name='cartitem-increment-decrement'),
     path('cartitem/<int:pk>/delete/', CartItemDelete.as_view(), name='cartitem-delete'),
+    path('track/order/<int:order_id>/', TrackOrderAPIView.as_view(), name='track_order_api'),
+   
 ]
 

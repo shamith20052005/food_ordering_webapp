@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Track Order</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Track Your Order</h1>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script>
+        var userCoordinates = JSON.parse('{{ user_coordinates|safe|escapejs }}');
+        var lohitCoordinates = JSON.parse('{{ lohit_coordinates|safe|escapejs }}');
+        // Initialize the map
+        var map = L.map('map').setView(userCoordinates, 13);
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        // Add routing control
+        L.Routing.control({
+            waypoints: [
+                L.latLng(userCoordinates[0], userCoordinates[1]),
+                L.latLng(lohitCoordinates[0], lohitCoordinates[1])
+            ],
+            router: new L.Routing.OSRMv1({
+                serviceUrl: 'https://router.project-osrm.org/route/v1'
+            }),
+            lineOptions: {
+                styles: [{color: 'blue', opacity: 1, weight: 5}]
+            }
+        }).addTo(map);
+    </script>
+</body>
+</html>

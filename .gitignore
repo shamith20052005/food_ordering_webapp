@@ -1,1 +1,60 @@
 env/
+In Django, you can use the GeoDjango module to handle geographic data. However, to get the user's latitude and longitude from their GPS, you would typically do this on the client side (in the user's browser) using JavaScript and then send this data to your Django server.
+
+Here is a simple example of how you might do this using JavaScript:
+
+```javascript
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(sendPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function sendPosition(position) {
+        var url = "/your-django-url/";  // Replace with your Django URL
+        var data = {
+            'latitude': position.coords.latitude,
+            'longitude': position.coords.longitude
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'  // Django CSRF token
+            },
+            body: JSON.stringify(data)
+        });
+    }
+
+    getLocation();
+</script>
+```
+
+This script gets the user's current position and sends it to a specified Django URL as a POST request. You would need to replace `"/your-django-url/"` with the actual URL where you want to send the data.
+
+On the Django side, you can handle this data in a view like this:
+
+```python
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+@csrf_exempt
+def handle_location(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
+
+        # Now you can use latitude and longitude...
+        # ...
+
+        return JsonResponse({'status': 'ok'})
+    else:
+        return JsonResponse({'status': 'error', 'error': 'Invalid request method'})
+```
+
+This Django view receives the POST request, extracts the latitude and longitude from the request body, and then you can use these values as needed. If you have any other questions or need further assistance, feel free to ask! 😊
