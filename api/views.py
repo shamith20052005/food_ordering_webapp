@@ -15,6 +15,15 @@ from .serializers import (
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
+from rest_framework.authtoken.models import Token  # For token-based authentication
+from .serializers import UserSerializer, LoginSerializer, SignupSerializer
+from django.contrib.auth import login, logout
+from django.core.mail import send_mail
+from django.conf import settings 
+from django.utils.crypto import get_random_string
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import authenticate
+
 # Home API views
 
 class MenuList(generics.ListAPIView):
@@ -142,3 +151,41 @@ class CartItemDelete(generics.DestroyAPIView):
 
     def get_queryset(self):
         return self.queryset.filter(cart__user=self.request.user)
+
+
+# authentication API views
+
+# User View (for testing/admin purposes)
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+# Login View
+class LoginView(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = authenticate(username=serializer.data['username'], password=serializer.data['password'])
+            if user is not None:
+                login(request, user)
+                token, created = Token.objects.get_or_create(user=user)
+                return Response({'token': token.key})
+            else:
+                return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Sign Up View
+class SignupView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = SignupSerializer
+
+# Sign Out View
+class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Password Reset Request

@@ -5,6 +5,10 @@ from .views import (
     AddressList, CreateAddress, UserList,
     CartView, CartItemCreateUpdate, CartItemIncrementDecrement, CartItemDelete
 )
+from .views import (
+    UserList, LoginView, SignupView, LogoutView,
+    PasswordResetRequestView
+)
 
 urlpatterns = [
     path('menu/', MenuList.as_view()),
@@ -19,5 +23,9 @@ urlpatterns = [
     path('cartitem/', CartItemCreateUpdate.as_view(), name='cartitem-create-update'),
     path('cartitem/<int:pk>/', CartItemIncrementDecrement.as_view(), name='cartitem-increment-decrement'),
     path('cartitem/<int:pk>/delete/', CartItemDelete.as_view(), name='cartitem-delete'),
+    path('users/', UserList.as_view()),
+    path('login/', LoginView.as_view()),
+    path('signup/', SignupView.as_view()),
+    path('logout/', LogoutView.as_view()),
 ]
 

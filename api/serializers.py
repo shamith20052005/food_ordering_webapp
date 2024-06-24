@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from home.models import Menu, Category
 from orders.models import Orders, Address
 from cart.models import Cart, CartItem
+from django.contrib.auth import authenticate
 
 # Home 
 
@@ -62,3 +63,25 @@ class CartSerializer(serializers.ModelSerializer):
         model = Cart
         fields = ['id', 'user', 'items']
         read_only_fields = ['user']
+
+# authentication
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email']  # Fields you want to expose
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+class SignupSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)  # Don't include password in response
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
