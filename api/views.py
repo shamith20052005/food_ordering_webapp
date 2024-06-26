@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from cart.models import Cart, CartItem
 from .serializers import (
     UserSerializer, MenuSerializer, CategorySerializer, 
-    OrderSerializer, AddressSerializer, CartSerializer, CartItemSerializer
+    OrderSerializer, AddressSerializer, CartSerializer, CartItemSerializer,TrackOrderSerializer
 )
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -258,3 +258,23 @@ class BestsellerListView(generics.ListAPIView):
             .values_list('items', flat=True)[:5]  # Get top 5 IDs
         )
         return Menu.objects.filter(id__in=bestseller_ids)
+    
+
+#track
+
+class TrackOrderAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request, order_id):
+        try:
+            order = Orders.objects.get(id=order_id, user=request.user)
+        except Orders.DoesNotExist:
+            return Response({'detail': 'Order not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if not order.is_placed():
+            return Response({'detail': 'Order is not placed yet'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not order.address:
+            return Response({'detail': 'No address provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = TrackOrderSerializer(order)
+        return Response(serializer.data)

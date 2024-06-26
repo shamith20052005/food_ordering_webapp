@@ -32,6 +32,9 @@ class Orders(models.Model):
     
     def __str__(self):
         return f'{self.user} | {self.date}'
+    
+    def is_placed(self):
+        return self.status != 'pending'
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Orders, related_name='items', on_delete=models.CASCADE)

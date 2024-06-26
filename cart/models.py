@@ -21,3 +21,5 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.menu_item.item}"
+    def get_cost(self):
+        return self.menu_item.price * self.quantity

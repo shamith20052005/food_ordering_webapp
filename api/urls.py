@@ -6,7 +6,7 @@ from .views import (
     CartView, CartItemCreate, CartItemIncrementDecrement, CartItemDelete
 )
 from .views import (
-    UserList, LoginView, SignupView, LogoutView, GetProfileView, BestsellerListView
+    UserList, LoginView, SignupView, LogoutView, GetProfileView, BestsellerListView,TrackOrderAPIView
 )
 
 urlpatterns = [
@@ -28,5 +28,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view()),
     path('profile/', GetProfileView.as_view(), name='get-profile'),
     path('bestsellers/', BestsellerListView.as_view(), name='bestsellers'),
+    path('track/order/<int:order_id>/', TrackOrderAPIView.as_view(), name='track_order_api'),
 ]
 

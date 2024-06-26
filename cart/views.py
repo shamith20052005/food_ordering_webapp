@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django import forms
 from home.models import Menu
 from .models import Cart, CartItem
-from orders.models import Orders, Address
+from orders.models import Orders, Address,OrderItem
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -85,11 +85,16 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
         cart_items = CartItem.objects.filter(cart=cart)
 
         order = form.save(commit=False)
-
         order.user = self.request.user
         order.save()
 
-        order.items.set(cart_item.menu_item for cart_item in cart_items)
+        # Create OrderItems for each CartItem
+        for cart_item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                menu_item=cart_item.menu_item,
+                quantity=cart_item.quantity
+            )
 
         cart_items.delete()
         self.object = order
