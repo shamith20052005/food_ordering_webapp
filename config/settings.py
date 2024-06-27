@@ -37,7 +37,7 @@ else:
 
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["https://souruchi.up.railway.app/"]
 
 
 # Application definition
