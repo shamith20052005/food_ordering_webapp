@@ -22,3 +22,5 @@ eggs/
 .idea/
 .venv
 .DS_Store
+
+config/.env
