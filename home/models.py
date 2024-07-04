@@ -12,7 +12,7 @@ class Menu(models.Model):
     category = models.ManyToManyField('category', related_name='item', blank=True)
     veg_nonveg_egg = models.CharField(max_length=10, choices=TYPES, default='veg')
     avg_time_taken = models.IntegerField(null=True)
-    image = models.ImageField(upload_to='menu_images/', blank=True, null=True)
+    image_url = models.URLField(max_length=500, blank=True, null=True) 
     is_available = models.BooleanField(default=True)
 
     def __str__(self):
@@ -23,7 +23,7 @@ class Menu(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(unique=True, null=True, blank=True)
-    image = models.ImageField(upload_to='category_images/', blank=True, null=True)
+    image_url = models.URLField(max_length=500, blank=True, null=True) 
 
     def __str__(self):
         return f'{self.name}'
