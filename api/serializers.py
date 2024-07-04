@@ -17,13 +17,13 @@ class MenuSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(many=True, slug_field='name', read_only=True)
     class Meta:
         model = Menu
-        fields = ['id', 'item', 'description', 'price', 'category', 'veg_nonveg_egg', 'image', 'avg_time_taken', 'is_available']
+        fields = ['id', 'item', 'description', 'price', 'category', 'veg_nonveg_egg', 'image_url', 'avg_time_taken', 'is_available']
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name', 'slug', 'image']
+        fields = ['name', 'slug', 'image_url']
 
 
 # Orders 
