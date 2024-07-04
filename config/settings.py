@@ -188,5 +188,5 @@ AUTH_USER_MODEL = 'users.CustomUser'
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000',
      'https://souruchi.up.railway.app',
-     'https://heet434.github.io/lohit-frontend'
+     'https://heet434.github.io'
 ]
